@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invest in Ural Game</title>
+    <!-- Подключаем Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Подключаем иконки Lucide -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        /* Шрифт Impact для логотипа */
+        @font-face {
+            font-family: 'Impact';
+            src: local('Impact'), local('Impact-Regular'), url('https://fonts.cdnfonts.com/s/13926/Impact.woff') format('woff');
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f3f4f6;
+        }
+
+        /* Анимации */
+        @keyframes fade-in {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fade-in 0.4s ease-out forwards;
+        }
+
+        @keyframes slide-in {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        .animate-slide-in {
+            animation: slide-in 0.3s ease-out forwards;
+        }
+
+        /* SVG Фильтр для эффекта акварели */
+        .watercolor-effect {
+            filter: url(#watercolor) contrast(110%) saturate(130%) sepia(20%);
+        }
+    </style>
+</head>
+<body class="h-screen w-full flex justify-center overflow-hidden">
+
+    <!-- Скрытый SVG фильтр -->
+    <svg class="absolute w-0 h-0">
+        <defs>
+            <filter id="watercolor">
+                <feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="3" result="noise" />
+                <feDisplacementMap in="SourceGraphic" in2="noise" scale="8" />
+                <feComponentTransfer>
+                    <feFuncR type="linear" slope="1.1" />
+                    <feFuncG type="linear" slope="1.1" />
+                    <feFuncB type="linear" slope="1.1" />
+                </feComponentTransfer>
+            </filter>
+        </defs>
+    </svg>
+
+    <!-- Основной контейнер приложения -->
+    <div id="app" class="w-full max-w-md h-full bg-white shadow-2xl relative flex flex-col">
+        <!-- Сюда будет рендериться контент -->
+    </div>
+
+    <script>
+        // --- ДАННЫЕ ---
+
+        const CAT = {
+            HISTORY: 'history',
+            CREATIVE: 'creative',
+            HEALTH: 'health',
+            SPA: 'spa',
+            NATURE: 'nature'
+        };
+
+        const BRAND_BG = "bg-blue-700";
+
+        const QUESTIONS = [
+            {
+                id: 1,
+                text: "Какой тип локации вас привлекает больше всего?",
+                options: [
+                    { text: "Старинная усадьба или памятник архитектуры", category: CAT.HISTORY },
+                    { text: "Индустриальная площадка или завод", category: CAT.CREATIVE },
+                    { text: "Тихий природный уголок у воды", category: CAT.HEALTH },
+                    { text: "Центр города или оживленное место", category: CAT.SPA },
+                    { text: "Лесной массив вдали от цивилизации", category: CAT.NATURE },
+                ]
+            },
+            {
+                id: 2,
+                text: "Кто ваша целевая аудитория?",
+                options: [
+                    { text: "Ценители культуры и истории", category: CAT.HISTORY },
+                    { text: "Молодежь, хипстеры, креативный класс", category: CAT.CREATIVE },
+                    { text: "Люди, заботящиеся о здоровье и лечении", category: CAT.HEALTH },
+                    { text: "Любители комфорта и релакса", category: CAT.SPA },
+                    { text: "Семьи и любители активного отдыха", category: CAT.NATURE },
+                ]
+            },
+            {
+                id: 3,
+                text: "Какова главная миссия вашего проекта?",
+                options: [
+                    { text: "Сохранить наследие для потомков", category: CAT.HISTORY },
+                    { text: "Вдохнуть новую жизнь в старые стены", category: CAT.CREATIVE },
+                    { text: "Оздоровление нации", category: CAT.HEALTH },
+                    { text: "Предоставить сервис высокого уровня", category: CAT.SPA },
+                    { text: "Единение человека с природой", category: CAT.NATURE },
+                ]
+            },
+            {
+                id: 4,
+                text: "Какой уровень сервиса вы планируете?",
+                options: [
+                    { text: "Бутик-отель с историей", category: CAT.HISTORY },
+                    { text: "Демократичный, фестивальный формат", category: CAT.CREATIVE },
+                    { text: "Санаторный тип с процедурами", category: CAT.HEALTH },
+                    { text: "Премиум SPA и велнес", category: CAT.SPA },
+                    { text: "Глэмпинг или уютные домики", category: CAT.NATURE },
+                ]
+            },
+            {
+                id: 5,
+                text: "География: какой город вам ближе по духу?",
+                options: [
+                    { text: "Любой город с богатой историей", category: CAT.HISTORY },
+                    { text: "Сысерть — уральский креативный кластер", category: CAT.CREATIVE },
+                    { text: "Красноуфимск — спокойствие и воздух", category: CAT.HEALTH },
+                    { text: "Краснотурьинск — северный комфорт", category: CAT.SPA },
+                    { text: "Первоуральск — ворота в Европу-Азию", category: CAT.NATURE },
+                ]
+            }
+        ];
+
+        const RESULTS = {
+            [CAT.HISTORY]: {
+                title: "Историческое наследие",
+                location: "Свердловская область",
+                description: "Вам идеально подойдет инвестирование в восстановление исторических усадеб. Это вклад в вечность и создание уникального туристического магнита с душой.",
+                quote: "История — это единственный актив, который со временем становится только дороже.",
+                link: "https://invest-in-ural.ru/cultural-heritage-sites/",
+                localFile: "./Заставка (Туринск) — крупный размер.jpeg",
+                preview: "https://i.ibb.co/3Wf4gNq/watercolor-building.jpg",
+                badge: "Культурное наследие",
+                needsFilter: false
+            },
+            [CAT.CREATIVE]: {
+                title: "«Лето на заводе»",
+                location: "г. Сысерть",
+                description: "Ваш выбор — креативная ревитализация. Проект в Сысерти доказал, что старинный завод может стать местом силы для молодежи и туристов со всей страны.",
+                quote: "Творческая энергия способна оживить даже стены вековой давности.",
+                link: "https://invest-in-ural.ru/projects/investitsionnoe-predlozhenie-festival-leto-na-zavode/",
+                localFile: "./2022-06-11 14-11-45_1673300361476.jpg",
+                preview: "https://images.unsplash.com/photo-1565514020176-db99c828d57d?auto=format&fit=crop&q=80&w=800",
+                badge: "Креативный кластер",
+                needsFilter: true
+            },
+            [CAT.HEALTH]: {
+                title: "Оздоровительный комплекс",
+                location: "г. Красноуфимск",
+                description: "Вы ориентированы на социально значимый и стабильный бизнес. Строительство современного оздоровительного центра — это инвестиция в качество жизни.",
+                quote: "Здоровье — это тренд, который никогда не выйдет из моды.",
+                link: "https://invest-in-ural.ru/projects/stroitelstvo-ozdorovitelnogo-kompleksa-v-krasnoufimske/",
+                localFile: "./a_serene_wellness_resort_nestled_in_the_ural_mountains_situated_on_the_banks_of_a_calm_clear_river__qxqxgnosepxpa223tl7w_1.jpg",
+                preview: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&q=80&w=800",
+                badge: "Медицинский туризм",
+                needsFilter: true
+            },
+            [CAT.SPA]: {
+                title: "SPA-комплекс «Богословский»",
+                location: "г. Краснотурьинск",
+                description: "Индустрия релакса и красоты — ваш путь. Современный SPA-комплекс станет точкой притяжения для тех, кто ищет высокий уровень сервиса и отдыха.",
+                quote: "Комфорт и гармония — то, за что люди готовы платить всегда.",
+                link: "https://invest-in-ural.ru/projects/investitsionnoe-predlozhenie-po-stroitelstvu-spa-kompleksa-v-krasnoturinske/",
+                localFile: "./фото на портал.jpg",
+                preview: "https://images.unsplash.com/photo-1519451241324-20b4ea2c4220?auto=format&fit=crop&q=80&w=800",
+                badge: "SPA и Релакс",
+                needsFilter: true
+            },
+            [CAT.NATURE]: {
+                title: "База отдыха",
+                location: "г. Первоуральск",
+                description: "Природа Урала — ваш главный партнер. Создание современной базы отдыха удовлетворит растущий спрос на экологичный и активный туризм.",
+                quote: "Лучший отдых — это смена обстановки в окружении леса и тишины.",
+                link: "https://invest-in-ural.ru/projects/investitsionnoe-predlozhenie-po-stroitelstvu-bazy-otdykha-v-pervouralske-/",
+                localFile: "./453f1915-8d20-41e4-ac85-e9507a11bd22.jpg",
+                preview: "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&q=80&w=800",
+                badge: "Эко-туризм",
+                needsFilter: true
+            }
+        };
+
+        // --- СОСТОЯНИЕ (STATE) ---
+        let gameState = 'start'; // 'start', 'quiz', 'result'
+        let currentStep = 0;
+        let scores = {
+            [CAT.HISTORY]: 0,
+            [CAT.CREATIVE]: 0,
+            [CAT.HEALTH]: 0,
+            [CAT.SPA]: 0,
+            [CAT.NATURE]: 0
+        };
+
+        // --- КОМПОНЕНТЫ (HTML GENERATORS) ---
+
+        function getLogoHTML() {
+            return `
+            <div class="flex flex-col items-start select-none transform scale-90 sm:scale-100 origin-left">
+                <div class="text-[3rem] leading-[0.85] font-black tracking-tighter text-[#2b5ae8]" style="font-family: 'Impact', sans-serif;">
+                    INVEST
+                </div>
+                <div class="flex items-stretch h-[3rem] mt-1">
+                    <div class="relative flex items-center justify-center bg-[#2b5ae8] text-white px-2 mr-2"
+                        style="clip-path: polygon(0% 0%, 75% 0%, 100% 50%, 75% 100%, 0% 100%); width: 3.4rem;">
+                        <span class="text-4xl font-black tracking-tighter -ml-2" style="font-family: 'Impact', sans-serif;">IN</span>
+                    </div>
+                    <div class="text-[3rem] leading-[0.85] font-black tracking-tighter text-[#2b5ae8]" style="font-family: 'Impact', sans-serif;">
+                        URAL
+                    </div>
+                </div>
+            </div>
+            `;
+        }
+
+        function renderStartScreen() {
+            return `
+            <div class="flex flex-col h-full p-6 justify-between animate-fade-in bg-white">
+                <div class="mt-8">
+                    ${getLogoHTML()}
+                    <h1 class="text-3xl font-bold text-gray-800 mt-10 leading-tight">
+                        Найдите свой проект на Урале
+                    </h1>
+                    <p class="text-gray-500 mt-4 text-lg">
+                        Пройдите тест и получите персонализированное инвестиционное предложение с готовой концепцией.
+                    </p>
+                </div>
+
+                <div class="mb-8">
+                    <button onclick="handleStart()" class="w-full ${BRAND_BG} hover:bg-blue-800 text-white font-bold py-4 rounded-xl shadow-lg flex items-center justify-center gap-3 active:scale-95 transition-all">
+                        <span>Начать тест</span>
+                        <i data-lucide="arrow-right"></i>
+                    </button>
+                    <div class="text-center mt-4 text-xs text-gray-400 uppercase tracking-widest">
+                        Invest in Ural • Official Guide
+                    </div>
+                </div>
+            </div>
+            `;
+        }
+
+        function renderQuizScreen() {
+            const question = QUESTIONS[currentStep];
+            const progress = `${currentStep + 1} / ${QUESTIONS.length}`;
+            
+            const optionsHTML = question.options.map((option) => `
+                <button onclick="handleAnswer('${option.category}')" class="w-full text-left p-4 rounded-xl border-2 border-gray-100 hover:border-blue-500 hover:bg-blue-50 transition-colors group flex justify-between items-center">
+                    <span class="font-medium text-gray-700 group-hover:text-blue-700">${option.text}</span>
+                    <i data-lucide="chevron-right" class="text-gray-300 group-hover:text-blue-500"></i>
+                </button>
+            `).join('');
+
+            return `
+            <div class="flex flex-col h-full p-6 animate-slide-in bg-white">
+                <div class="flex justify-between items-center mb-6">
+                    ${getLogoHTML()}
+                    <span class="text-sm font-bold text-gray-400 bg-gray-100 px-3 py-1 rounded-full">
+                        ${progress}
+                    </span>
+                </div>
+
+                <div class="flex-1 flex flex-col justify-center pb-12">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-8 leading-snug">
+                        ${question.text}
+                    </h2>
+                    <div class="space-y-3">
+                        ${optionsHTML}
+                    </div>
+                </div>
+            </div>
+            `;
+        }
+
+        function renderResultScreen() {
+            // Определение победителя
+            const winnerKey = Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b);
+            const result = RESULTS[winnerKey];
+
+            // Формируем стили для фото (фильтр)
+            const filterClass = result.needsFilter ? 'watercolor-effect' : '';
+            const imgStyle = result.needsFilter ? 'transform: scale(1.05);' : '';
+
+            return `
+            <div class="flex flex-col h-full bg-white animate-fade-in overflow-y-auto">
+                <div class="p-6 pb-0">
+                    ${getLogoHTML()}
+                </div>
+
+                <div class="p-6 flex flex-col flex-1">
+                    <div class="mb-2 inline-flex items-center gap-2">
+                        <span class="text-xs font-bold uppercase tracking-wider text-white ${BRAND_BG} px-2 py-1 rounded">
+                            Рекомендация
+                        </span>
+                        <span class="text-xs font-semibold text-blue-600 uppercase tracking-wider border border-blue-200 px-2 py-1 rounded">
+                            ${result.badge}
+                        </span>
+                    </div>
+
+                    <h2 class="text-3xl font-bold text-gray-900 mb-1 leading-tight">${result.title}</h2>
+                    <div class="flex items-center text-gray-500 text-sm mb-4">
+                        <i data-lucide="map-pin" class="mr-1 w-4 h-4"></i>
+                        ${result.location}
+                    </div>
+
+                    <!-- ФОТО БЛОК -->
+                    <div class="relative w-full h-56 rounded-2xl overflow-hidden mb-6 shadow-md bg-gray-100 border border-gray-100">
+                        <img 
+                            src="${result.localFile}" 
+                            onerror="this.onerror=null;this.src='${result.preview}';"
+                            alt="${result.title}" 
+                            class="w-full h-full object-cover transition-all duration-700 ${filterClass}"
+                            style="${imgStyle}"
+                        />
+                        <div class="absolute inset-0 ring-1 ring-inset ring-black/5 rounded-2xl pointer-events-none"></div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-white/10 to-transparent pointer-events-none mix-blend-overlay"></div>
+                    </div>
+
+                    <div class="bg-blue-50 p-4 rounded-xl border border-blue-100 mb-6">
+                        <p class="text-gray-700 text-sm leading-relaxed mb-3">
+                            ${result.description}
+                        </p>
+                        <div class="flex gap-3 items-start">
+                            <i data-lucide="check-circle" class="text-blue-600 w-5 h-5 min-w-[20px] mt-0.5"></i>
+                            <p class="text-sm italic text-blue-800 font-medium">
+                                "${result.quote}"
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="mt-auto space-y-3 pb-6">
+                        <a href="${result.link}" target="_blank" rel="noopener noreferrer" class="w-full ${BRAND_BG} hover:bg-blue-800 text-white font-bold py-4 px-6 rounded-xl shadow-lg flex items-center justify-between group transition-all">
+                            <span>Перейти на портал</span>
+                            <i data-lucide="external-link" class="group-hover:translate-x-1 transition-transform"></i>
+                        </a>
+
+                        <button onclick="handleRestart()" class="w-full bg-white hover:bg-gray-50 text-gray-500 font-semibold py-4 px-6 rounded-xl border-2 border-gray-100 flex items-center justify-center gap-2 transition-colors">
+                            <i data-lucide="refresh-cw" class="w-5 h-5"></i>
+                            <span>Пройти заново</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            `;
+        }
+
+        // --- ЛОГИКА ---
+
+        function handleStart() {
+            gameState = 'quiz';
+            currentStep = 0;
+            // Сброс очков
+            for (let key in scores) scores[key] = 0;
+            renderApp();
+        }
+
+        function handleAnswer(category) {
+            scores[category]++;
+            
+            if (currentStep < QUESTIONS.length - 1) {
+                currentStep++;
+                renderApp();
+            } else {
+                gameState = 'result';
+                renderApp();
+            }
+        }
+
+        function handleRestart() {
+            gameState = 'start';
+            renderApp();
+        }
+
+        // --- РЕНДЕРИНГ ---
+
+        function renderApp() {
+            const app = document.getElementById('app');
+            let html = '';
+
+            if (gameState === 'start') {
+                html = renderStartScreen();
+            } else if (gameState === 'quiz') {
+                html = renderQuizScreen();
+            } else if (gameState === 'result') {
+                html = renderResultScreen();
+            }
+
+            app.innerHTML = html;
+            
+            // Инициализация иконок Lucide после обновления DOM
+            lucide.createIcons();
+        }
+
+        // Первоначальный запуск
+        renderApp();
+
+    </script>
+</body>
+</html>
