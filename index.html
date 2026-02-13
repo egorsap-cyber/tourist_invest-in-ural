@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Invest in Ural Game</title>
     <!-- Подключаем Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -19,6 +19,11 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             background-color: #f3f4f6;
+            /* Исправление скролла для iOS */
+            -webkit-overflow-scrolling: touch;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
         }
 
         /* Анимации */
@@ -37,36 +42,28 @@
         .animate-slide-in {
             animation: slide-in 0.3s ease-out forwards;
         }
-
-        /* SVG Фильтр для эффекта акварели */
-        .watercolor-effect {
-            filter: url(#watercolor) contrast(110%) saturate(130%) sepia(20%);
-        }
     </style>
 </head>
-<body class="h-screen w-full flex justify-center overflow-hidden">
-
-    <!-- Скрытый SVG фильтр -->
-    <svg class="absolute w-0 h-0">
-        <defs>
-            <filter id="watercolor">
-                <feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="3" result="noise" />
-                <feDisplacementMap in="SourceGraphic" in2="noise" scale="8" />
-                <feComponentTransfer>
-                    <feFuncR type="linear" slope="1.1" />
-                    <feFuncG type="linear" slope="1.1" />
-                    <feFuncB type="linear" slope="1.1" />
-                </feComponentTransfer>
-            </filter>
-        </defs>
-    </svg>
+<body class="w-full flex justify-center">
 
     <!-- Основной контейнер приложения -->
-    <div id="app" class="w-full max-w-md h-full bg-white shadow-2xl relative flex flex-col">
+    <!-- Изменено: min-h-screen вместо h-full/h-screen для работы скролла -->
+    <div id="app" class="w-full max-w-md min-h-screen bg-white shadow-2xl relative flex flex-col mx-auto">
         <!-- Сюда будет рендериться контент -->
     </div>
 
     <script>
+        // --- ЛОГИРОВАНИЕ ---
+        function logInfo(action, details = {}) {
+            const timestamp = new Date().toISOString();
+            console.log(`[INFO] [${timestamp}] ${action}:`, details);
+        }
+
+        function logError(action, error) {
+            const timestamp = new Date().toISOString();
+            console.error(`[ERROR] [${timestamp}] ${action}:`, error);
+        }
+
         // --- ДАННЫЕ ---
 
         const CAT = {
@@ -146,8 +143,7 @@
                 link: "https://invest-in-ural.ru/cultural-heritage-sites/",
                 localFile: "./Заставка (Туринск) — крупный размер.jpeg",
                 preview: "https://invest-in-ural.ru/upload/iblock/a89/t2wr4n5v042wt7960xf7xgy0t5r6y2yy/%D0%97%D0%B0%D1%81%D1%82%D0%B0%D0%B2%D0%BA%D0%B0%20%28%D0%A2%D1%83%D1%80%D0%B8%D0%BD%D1%81%D0%BA%29%C2%A0%E2%80%94%20%D0%BA%D1%80%D1%83%D0%BF%D0%BD%D1%8B%D0%B8%CC%86%20%D1%80%D0%B0%D0%B7%D0%BC%D0%B5%D1%80.jpeg",
-                badge: "Культурное наследие",
-                needsFilter: false
+                badge: "Культурное наследие"
             },
             [CAT.CREATIVE]: {
                 title: "«Лето на заводе»",
@@ -157,8 +153,7 @@
                 link: "https://invest-in-ural.ru/projects/investitsionnoe-predlozhenie-festival-leto-na-zavode/",
                 localFile: "./2022-06-11 14-11-45_1673300361476.jpg",
                 preview: "https://invest-in-ural.ru/upload/iblock/650/ybyv6e7itn7h8b6pe5corcsbbfc52x4t/2022-06-11%2014-11-45_1673300361476.JPG",
-                badge: "Креативный кластер",
-                needsFilter: true
+                badge: "Креативный кластер"
             },
             [CAT.HEALTH]: {
                 title: "Оздоровительный комплекс",
@@ -168,8 +163,7 @@
                 link: "https://invest-in-ural.ru/projects/stroitelstvo-ozdorovitelnogo-kompleksa-v-krasnoufimske/",
                 localFile: "./a_serene_wellness_resort_nestled_in_the_ural_mountains_situated_on_the_banks_of_a_calm_clear_river__qxqxgnosepxpa223tl7w_1.jpg",
                 preview: "https://invest-in-ural.ru/upload/iblock/aca/z5ky9svgm42t9117kfretbvu23cvmeh3/a_serene_wellness_resort_nestled_in_the_ural_mountains_situated_on_the_banks_of_a_calm_clear_river__qxqxgnosepxpa223tl7w_1.png",
-                badge: "Медицинский туризм",
-                needsFilter: true
+                badge: "Медицинский туризм"
             },
             [CAT.SPA]: {
                 title: "SPA-комплекс",
@@ -179,8 +173,7 @@
                 link: "https://invest-in-ural.ru/projects/investitsionnoe-predlozhenie-po-stroitelstvu-spa-kompleksa-v-krasnoturinske/",
                 localFile: "./фото на портал.jpg",
                 preview: "https://invest-in-ural.ru/upload/iblock/728/rl33sq984wpjn105x140fesgc5w56woz/%D1%84%D0%BE%D1%82%D0%BE%20%D0%BD%D0%B0%20%D0%BF%D0%BE%D1%80%D1%82%D0%B0%D0%BB.png",
-                badge: "SPA и Релакс",
-                needsFilter: true
+                badge: "SPA и Релакс"
             },
             [CAT.NATURE]: {
                 title: "База отдыха",
@@ -190,8 +183,7 @@
                 link: "https://invest-in-ural.ru/projects/investitsionnoe-predlozhenie-po-stroitelstvu-bazy-otdykha-v-pervouralske-/",
                 localFile: "./453f1915-8d20-41e4-ac85-e9507a11bd22.jpg",
                 preview: "https://invest-in-ural.ru/upload/iblock/118/4103n0ltxi709cj9lsf68gt9p335hv0j/453f1915-8d20-41e4-ac85-e9507a11bd22.jpg",
-                badge: "Эко-туризм",
-                needsFilter: true
+                badge: "Эко-туризм"
             }
         };
 
@@ -229,7 +221,7 @@
 
         function renderStartScreen() {
             return `
-            <div class="flex flex-col h-full p-6 justify-between animate-fade-in bg-white">
+            <div class="flex flex-col min-h-[inherit] p-6 justify-between animate-fade-in bg-white">
                 <div class="mt-8">
                     ${getLogoHTML()}
                     <h1 class="text-3xl font-bold text-gray-800 mt-10 leading-tight">
@@ -240,7 +232,7 @@
                     </p>
                 </div>
 
-                <div class="mb-8">
+                <div class="mb-8 mt-auto pt-10">
                     <button onclick="handleStart()" class="w-full ${BRAND_BG} hover:bg-blue-800 text-white font-bold py-4 rounded-xl shadow-lg flex items-center justify-center gap-3 active:scale-95 transition-all">
                         <span>Начать тест</span>
                         <i data-lucide="arrow-right"></i>
@@ -265,7 +257,7 @@
             `).join('');
 
             return `
-            <div class="flex flex-col h-full p-6 animate-slide-in bg-white">
+            <div class="flex flex-col min-h-[inherit] p-6 animate-slide-in bg-white">
                 <div class="flex justify-between items-center mb-6">
                     ${getLogoHTML()}
                     <span class="text-sm font-bold text-gray-400 bg-gray-100 px-3 py-1 rounded-full">
@@ -286,100 +278,110 @@
         }
 
         function renderResultScreen() {
-            // Определение победителя
-            const winnerKey = Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b);
-            const result = RESULTS[winnerKey];
+            try {
+                // Определение победителя
+                const winnerKey = Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b);
+                const result = RESULTS[winnerKey];
+                
+                logInfo('Result calculated', { winner: winnerKey, score: scores[winnerKey] });
 
-            // Формируем стили для фото (фильтр)
-            const filterClass = result.needsFilter ? 'watercolor-effect' : '';
-            const imgStyle = result.needsFilter ? 'transform: scale(1.05);' : '';
-
-            return `
-            <div class="flex flex-col h-full bg-white animate-fade-in overflow-y-auto">
-                <div class="p-6 pb-0">
-                    ${getLogoHTML()}
-                </div>
-
-                <div class="p-6 flex flex-col flex-1">
-                    <div class="mb-2 inline-flex items-center gap-2">
-                        <span class="text-xs font-bold uppercase tracking-wider text-white ${BRAND_BG} px-2 py-1 rounded">
-                            Рекомендация
-                        </span>
-                        <span class="text-xs font-semibold text-blue-600 uppercase tracking-wider border border-blue-200 px-2 py-1 rounded">
-                            ${result.badge}
-                        </span>
+                return `
+                <div class="flex flex-col min-h-[inherit] bg-white animate-fade-in">
+                    <div class="p-6 pb-0">
+                        ${getLogoHTML()}
                     </div>
 
-                    <h2 class="text-3xl font-bold text-gray-900 mb-1 leading-tight">${result.title}</h2>
-                    <div class="flex items-center text-gray-500 text-sm mb-4">
-                        <i data-lucide="map-pin" class="mr-1 w-4 h-4"></i>
-                        ${result.location}
-                    </div>
+                    <div class="p-6 flex flex-col flex-1">
+                        <div class="mb-2 inline-flex items-center gap-2">
+                            <span class="text-xs font-bold uppercase tracking-wider text-white ${BRAND_BG} px-2 py-1 rounded">
+                                Рекомендация
+                            </span>
+                            <span class="text-xs font-semibold text-blue-600 uppercase tracking-wider border border-blue-200 px-2 py-1 rounded">
+                                ${result.badge}
+                            </span>
+                        </div>
 
-                    <!-- ФОТО БЛОК -->
-                    <div class="relative w-full h-56 rounded-2xl overflow-hidden mb-6 shadow-md bg-gray-100 border border-gray-100">
-                        <img 
-                            src="${result.localFile}" 
-                            onerror="this.onerror=null;this.src='${result.preview}';"
-                            alt="${result.title}" 
-                            class="w-full h-full object-cover transition-all duration-700 ${filterClass}"
-                            style="${imgStyle}"
-                        />
-                        <div class="absolute inset-0 ring-1 ring-inset ring-black/5 rounded-2xl pointer-events-none"></div>
-                        <div class="absolute inset-0 bg-gradient-to-t from-white/10 to-transparent pointer-events-none mix-blend-overlay"></div>
-                    </div>
+                        <h2 class="text-3xl font-bold text-gray-900 mb-1 leading-tight">${result.title}</h2>
+                        <div class="flex items-center text-gray-500 text-sm mb-4">
+                            <i data-lucide="map-pin" class="mr-1 w-4 h-4"></i>
+                            ${result.location}
+                        </div>
 
-                    <div class="bg-blue-50 p-4 rounded-xl border border-blue-100 mb-6">
-                        <p class="text-gray-700 text-sm leading-relaxed mb-3">
-                            ${result.description}
-                        </p>
-                        <div class="flex gap-3 items-start">
-                            <i data-lucide="check-circle" class="text-blue-600 w-5 h-5 min-w-[20px] mt-0.5"></i>
-                            <p class="text-sm italic text-blue-800 font-medium">
-                                "${result.quote}"
+                        <!-- ФОТО БЛОК (Без SVG фильтров для оптимизации) -->
+                        <div class="relative w-full h-56 rounded-2xl overflow-hidden mb-6 shadow-md bg-gray-100 border border-gray-100">
+                            <img 
+                                src="${result.localFile}" 
+                                onerror="this.onerror=null;this.src='${result.preview}'; console.log('Image fallback triggered');"
+                                alt="${result.title}" 
+                                class="w-full h-full object-cover transition-all duration-700 hover:scale-105"
+                            />
+                            <div class="absolute inset-0 ring-1 ring-inset ring-black/5 rounded-2xl pointer-events-none"></div>
+                            <div class="absolute inset-0 bg-gradient-to-t from-white/10 to-transparent pointer-events-none mix-blend-overlay"></div>
+                        </div>
+
+                        <div class="bg-blue-50 p-4 rounded-xl border border-blue-100 mb-6">
+                            <p class="text-gray-700 text-sm leading-relaxed mb-3">
+                                ${result.description}
                             </p>
+                            <div class="flex gap-3 items-start">
+                                <i data-lucide="check-circle" class="text-blue-600 w-5 h-5 min-w-[20px] mt-0.5"></i>
+                                <p class="text-sm italic text-blue-800 font-medium">
+                                    "${result.quote}"
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="mt-auto space-y-3 pb-6">
+                            <a href="${result.link}" target="_blank" rel="noopener noreferrer" class="w-full ${BRAND_BG} hover:bg-blue-800 text-white font-bold py-4 px-6 rounded-xl shadow-lg flex items-center justify-between group transition-all">
+                                <span>Перейти на портал</span>
+                                <i data-lucide="external-link" class="group-hover:translate-x-1 transition-transform"></i>
+                            </a>
+
+                            <button onclick="handleRestart()" class="w-full bg-white hover:bg-gray-50 text-gray-500 font-semibold py-4 px-6 rounded-xl border-2 border-gray-100 flex items-center justify-center gap-2 transition-colors">
+                                <i data-lucide="refresh-cw" class="w-5 h-5"></i>
+                                <span>Пройти заново</span>
+                            </button>
                         </div>
                     </div>
-
-                    <div class="mt-auto space-y-3 pb-6">
-                        <a href="${result.link}" target="_blank" rel="noopener noreferrer" class="w-full ${BRAND_BG} hover:bg-blue-800 text-white font-bold py-4 px-6 rounded-xl shadow-lg flex items-center justify-between group transition-all">
-                            <span>Перейти на портал</span>
-                            <i data-lucide="external-link" class="group-hover:translate-x-1 transition-transform"></i>
-                        </a>
-
-                        <button onclick="handleRestart()" class="w-full bg-white hover:bg-gray-50 text-gray-500 font-semibold py-4 px-6 rounded-xl border-2 border-gray-100 flex items-center justify-center gap-2 transition-colors">
-                            <i data-lucide="refresh-cw" class="w-5 h-5"></i>
-                            <span>Пройти заново</span>
-                        </button>
-                    </div>
                 </div>
-            </div>
-            `;
+                `;
+            } catch (e) {
+                logError('Error rendering result screen', e);
+                return `<div class="p-6">Произошла ошибка при отображении результата. <button onclick="handleRestart()">Попробовать снова</button></div>`;
+            }
         }
 
         // --- ЛОГИКА ---
 
         function handleStart() {
+            logInfo('App started');
             gameState = 'quiz';
             currentStep = 0;
             // Сброс очков
             for (let key in scores) scores[key] = 0;
             renderApp();
+            // Прокрутка вверх при начале
+            window.scrollTo(0, 0);
         }
 
         function handleAnswer(category) {
+            logInfo('Answer selected', { step: currentStep, category: category });
             scores[category]++;
             
             if (currentStep < QUESTIONS.length - 1) {
                 currentStep++;
                 renderApp();
+                // Небольшой автоскролл для удобства
+                window.scrollTo({ top: 0, behavior: 'smooth' });
             } else {
                 gameState = 'result';
                 renderApp();
+                window.scrollTo(0, 0);
             }
         }
 
         function handleRestart() {
+            logInfo('Restart initiated');
             gameState = 'start';
             renderApp();
         }
@@ -390,22 +392,34 @@
             const app = document.getElementById('app');
             let html = '';
 
-            if (gameState === 'start') {
-                html = renderStartScreen();
-            } else if (gameState === 'quiz') {
-                html = renderQuizScreen();
-            } else if (gameState === 'result') {
-                html = renderResultScreen();
-            }
+            try {
+                if (gameState === 'start') {
+                    html = renderStartScreen();
+                } else if (gameState === 'quiz') {
+                    html = renderQuizScreen();
+                } else if (gameState === 'result') {
+                    html = renderResultScreen();
+                }
 
-            app.innerHTML = html;
-            
-            // Инициализация иконок Lucide после обновления DOM
-            lucide.createIcons();
+                app.innerHTML = html;
+                
+                // Инициализация иконок Lucide после обновления DOM
+                if (window.lucide) {
+                    lucide.createIcons();
+                } else {
+                    logError('Lucide library not found');
+                }
+            } catch (error) {
+                logError('Render failed', error);
+                app.innerHTML = '<div class="p-4 text-center">Critical Error. Please restart the app.</div>';
+            }
         }
 
-        // Первоначальный запуск
-        renderApp();
+        // Инициализация
+        window.onload = function() {
+            logInfo('Window loaded');
+            renderApp();
+        };
 
     </script>
 </body>
